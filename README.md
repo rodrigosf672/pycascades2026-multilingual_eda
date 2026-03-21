@@ -10,7 +10,7 @@ This repository demonstrates how to run SQL, Python, and R in a single notebook 
 
 ## Files
 
-- `multilingual_run_all_ready.ipynb` - Jupyter notebook demo (click "Run All")
+- `multilingual_demo.ipynb` - Jupyter notebook demo (click "Run All")
 - `multilingual_demo.qmd` - Quarto markdown equivalent
 
 ## Requirements
@@ -23,7 +23,7 @@ pip install ipython-sql prettytable==3.9.0 rpy2 pandas numpy scikit-learn
 
 **Jupyter Notebook:**
 ```bash
-jupyter notebook multilingual_run_all_ready.ipynb
+jupyter notebook multilingual_demo.ipynb
 ```
 
 **Quarto:**
