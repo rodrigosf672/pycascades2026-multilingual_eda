@@ -1,0 +1,103 @@
+---
+title: "Multilingual Notebook Demo"
+format: html
+jupyter: python3
+execute:
+  daemon: false
+---
+
+This notebook installs and configures everything needed to run SQL, Python, and R in one workflow.
+
+👉 Just click **Render** -- and hope for the best! 🤞
+
+```{python}
+# Install dependencies
+import sys
+!{sys.executable} -m pip install -q ipython-sql prettytable==3.9.0 rpy2 pandas numpy scikit-learn
+```
+
+```{python}
+# Load extensions
+%load_ext sql
+%load_ext rpy2.ipython
+
+# Fix SQL display style issue
+%config SqlMagic.style = 'PLAIN_COLUMNS'
+```
+
+```{python}
+# Connect to in-memory SQLite database
+%sql sqlite://
+```
+
+## Data frame creation
+
+```{python}
+# Create sample table
+import pandas as pd
+
+df = pd.DataFrame({
+    'customer_id': [1,2,3,4],
+    'total_amount': [100,200,300,400],
+    'region': ['A','B','A','B']
+})
+```
+
+## SQL Query
+
+```{python}
+# Save to SQL
+from sqlalchemy import create_engine
+engine = create_engine('sqlite://')
+rows_inserted = df.to_sql('sales', engine, if_exists='replace', index=False)
+print(f"Successfully inserted {rows_inserted} rows into the sales table")
+```
+
+## Log transformation with Python
+
+```{python}
+# Python transformation
+import numpy as np
+
+df['log_sales'] = np.log(df['total_amount'])
+df
+```
+
+## R Statistical Model
+
+```{python}
+%load_ext rpy2.ipython
+```
+
+```{r}
+#| python.reticulate: false
+library(tidyverse)
+library(reticulate)
+
+# Get the dataframe from Python
+df <- py$df
+df <- as_tibble(df)
+model <- lm(log_sales ~ region, data = df)
+summary(model)
+```
+
+## Basic Regression Model with Python
+
+```{python}
+# Machine learning in Python
+from sklearn.linear_model import LinearRegression
+
+X = df[['log_sales']]
+y = df['total_amount']
+
+model = LinearRegression().fit(X, y)
+model.coef_
+```
+
+## Final Insights
+
+- SQL → extraction
+- Python → transformation & ML
+- R → statistical modeling
+
+**One notebook, multiple languages.**
